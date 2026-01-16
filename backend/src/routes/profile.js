@@ -2,6 +2,7 @@ const express = require("express");
 const { requireRole, requireRtAccess } = require("../middleware");
 const multer = require("multer");
 const { uploadResidentDocument } = require("../services/localStorageService");
+const db = require("../db");
 const {
   getResidentByUser,
   getResidentProfileByUser,
@@ -98,6 +99,22 @@ router.put("/profile", async (req, res, next) => {
       req.auth.userId,
       req.body
     );
+    await db.query(
+      `INSERT INTO audit_log (id, rt_id, actor_user_id, action, metadata_json, created_at)
+       VALUES (:id, :rt_id, :actor_user_id, :action, :metadata_json, :created_at)`,
+      {
+        id: require("uuid").v4(),
+        rt_id: req.auth.rtId,
+        actor_user_id: req.auth.userId,
+        action: "RESIDENT_PROFILE_UPDATED",
+        metadata_json: JSON.stringify({
+          familyMembers: Array.isArray(req.body.familyMembers)
+            ? req.body.familyMembers.length
+            : 0
+        }),
+        created_at: new Date()
+      }
+    );
     res.json(result);
   } catch (err) {
     next(err);
@@ -158,6 +175,22 @@ router.post(
         uploadResult.originalName,
         uploadResult.mimeType,
         uploadResult.size
+      );
+      await db.query(
+        `INSERT INTO audit_log (id, rt_id, actor_user_id, action, metadata_json, created_at)
+         VALUES (:id, :rt_id, :actor_user_id, :action, :metadata_json, :created_at)`,
+        {
+          id: require("uuid").v4(),
+          rt_id: req.auth.rtId,
+          actor_user_id: req.auth.userId,
+          action: "RESIDENT_DOCUMENT_UPLOADED",
+          metadata_json: JSON.stringify({
+            type,
+            residentId: resident.id,
+            documentId: result.id
+          }),
+          created_at: new Date()
+        }
       );
       res.json(result);
     } catch (err) {

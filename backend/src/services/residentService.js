@@ -1,6 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
+const fs = require("fs");
 const db = require("../db");
+const { resolveStoragePath } = require("./localStorageService");
 
 const buildDocumentUrl = (documentId) => {
   const base = process.env.PUBLIC_BASE_URL || "";
@@ -273,10 +275,24 @@ const saveResidentDocument = async (
   size
 ) => {
   const docId = uuidv4();
-  await db.query(
-    `DELETE FROM resident_document WHERE resident_id = :resident_id AND type = :type`,
+  const [existingRows] = await db.query(
+    `SELECT id, storage_path FROM resident_document
+     WHERE resident_id = :resident_id AND type = :type
+     LIMIT 1`,
     { resident_id: residentId, type }
   );
+  if (existingRows.length > 0) {
+    await db.query(
+      `DELETE FROM resident_document WHERE id = :id`,
+      { id: existingRows[0].id }
+    );
+    if (existingRows[0].storage_path) {
+      const filePath = resolveStoragePath(existingRows[0].storage_path);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+  }
   await db.query(
     `INSERT INTO resident_document
      (id, rt_id, resident_id, type, storage_path, original_name, mime_type, size, uploaded_at, created_at)
