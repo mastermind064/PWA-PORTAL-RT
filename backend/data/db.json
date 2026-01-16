@@ -1,0 +1,197 @@
+{
+  "rts": [
+    {
+      "id": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "name": "006",
+      "rw": "013",
+      "address": "Greenland Healthfull Living P40, Curug, Bojongsari, Depok",
+      "status": "ACTIVE",
+      "inviteCode": "8A295D81",
+      "createdAt": "2026-01-15T02:06:25.712Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "b627265a-dc51-47e2-a3e4-919b5e7be51f",
+      "email": "superadmin@portalrt.local",
+      "phone": null,
+      "passwordHash": "$2a$10$KrgJP088Ct5BkR5W4QFyguwtRdj8UxcxrBXr7mCfb5axj1M/lmZLe",
+      "role": "SUPER_ADMIN",
+      "status": "ACTIVE",
+      "createdAt": "2026-01-15T01:16:54.586Z"
+    },
+    {
+      "id": "0084361f-1d76-4575-805e-077bda80d065",
+      "email": "adminrt006@yopmail.com",
+      "phone": "081210079919",
+      "passwordHash": "$2a$10$2neCeNu2ve7nYHNnPILaHO.2mj75rc5FC3wdl1xANZRH2DXp3QLua",
+      "role": "ADMIN_RT",
+      "status": "ACTIVE",
+      "createdAt": "2026-01-15T02:06:25.860Z"
+    },
+    {
+      "id": "5f5c2123-b081-41dc-b36e-d7cfed9753a0",
+      "email": "henry006@yopmail.com",
+      "phone": "098764646467",
+      "passwordHash": "$2a$10$TDUKi/fokKnhjWpcz/ssPeGdUMMz5qZZXmwdnCGmwrUrddvttdQJq",
+      "role": "WARGA",
+      "status": "ACTIVE",
+      "createdAt": "2026-01-15T02:42:19.846Z"
+    }
+  ],
+  "userRt": [
+    {
+      "id": "d22ac050-0020-46de-9528-a0010cc9aebb",
+      "userId": "0084361f-1d76-4575-805e-077bda80d065",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "role": "ADMIN_RT",
+      "status": "ACTIVE",
+      "createdAt": "2026-01-15T02:06:25.860Z"
+    },
+    {
+      "id": "0e49c9f8-ffc4-43e1-b6a1-1c8464563b9f",
+      "userId": "5f5c2123-b081-41dc-b36e-d7cfed9753a0",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "role": "WARGA",
+      "status": "ACTIVE",
+      "createdAt": "2026-01-15T02:42:19.846Z"
+    }
+  ],
+  "residents": [
+    {
+      "id": "21aba307-45cb-41f4-89a7-9d10ac849d65",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "userId": "5f5c2123-b081-41dc-b36e-d7cfed9753a0",
+      "fullName": "henry",
+      "phone": "098764646467",
+      "address": "Q6",
+      "approvalStatus": "APPROVED",
+      "createdAt": "2026-01-15T02:42:19.846Z"
+    }
+  ],
+  "familyCards": [
+    {
+      "id": "7df061c6-bbb8-4957-8f5e-63f6b426a4b5",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "residentId": "21aba307-45cb-41f4-89a7-9d10ac849d65",
+      "kkNumber": "1234567890123456",
+      "address": "Q6",
+      "notes": "-",
+      "createdAt": "2026-01-15T02:42:19.846Z"
+    }
+  ],
+  "familyMembers": [
+    {
+      "id": "8e054e07-7d76-4ba4-8789-c744232484c7",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "familyCardId": "7df061c6-bbb8-4957-8f5e-63f6b426a4b5",
+      "fullName": "istri henry",
+      "relationship": "istri",
+      "birthDate": "1980-01-01",
+      "isLivingHere": true,
+      "createdAt": "2026-01-15T02:42:19.846Z"
+    }
+  ],
+  "residentDocuments": [
+    {
+      "id": "f08f5227-3fad-4c4b-90f3-9eb5f1d42261",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "residentId": "21aba307-45cb-41f4-89a7-9d10ac849d65",
+      "type": "pdf",
+      "fileUrl": "some url here",
+      "uploadedAt": "2026-01-15T02:42:19.846Z",
+      "createdAt": "2026-01-15T02:42:19.846Z"
+    }
+  ],
+  "refreshTokens": [
+    {
+      "id": "c67cf882-36da-48f4-a13d-291d72349f30",
+      "userId": "b627265a-dc51-47e2-a3e4-919b5e7be51f",
+      "expiresAt": "2026-02-14T02:09:13.523Z"
+    },
+    {
+      "id": "69209886-8a55-45b5-9753-bc18b454892c",
+      "userId": "b627265a-dc51-47e2-a3e4-919b5e7be51f",
+      "expiresAt": "2026-02-14T02:37:15.418Z"
+    },
+    {
+      "id": "c590f9b8-76d4-4588-b103-717360269080",
+      "userId": "0084361f-1d76-4575-805e-077bda80d065",
+      "expiresAt": "2026-02-14T02:39:39.628Z"
+    },
+    {
+      "id": "cd3ceeeb-1915-4160-94bc-0a7cf43d57ce",
+      "userId": "5f5c2123-b081-41dc-b36e-d7cfed9753a0",
+      "expiresAt": "2026-02-14T02:47:02.718Z"
+    },
+    {
+      "id": "062ed4de-0c67-426a-a8ea-5dd6e6256daf",
+      "userId": "0084361f-1d76-4575-805e-077bda80d065",
+      "expiresAt": "2026-02-14T06:54:16.594Z"
+    },
+    {
+      "id": "c7d97212-e798-48cd-bbb3-125b7bba5596",
+      "userId": "b627265a-dc51-47e2-a3e4-919b5e7be51f",
+      "expiresAt": "2026-02-15T06:55:51.783Z"
+    },
+    {
+      "id": "adb70f63-dc65-4168-9bd2-8b2b569d8426",
+      "userId": "0084361f-1d76-4575-805e-077bda80d065",
+      "expiresAt": "2026-02-15T06:57:01.066Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "234fa600-f983-4497-89c4-febb26d88b7c",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "actorUserId": "b627265a-dc51-47e2-a3e4-919b5e7be51f",
+      "action": "RT_APPROVED",
+      "createdAt": "2026-01-15T02:38:27.549Z"
+    },
+    {
+      "id": "555d6c6f-a4ae-4da7-870d-92b871c26521",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "actorUserId": "0084361f-1d76-4575-805e-077bda80d065",
+      "action": "RESIDENT_APPROVED",
+      "createdAt": "2026-01-15T02:43:10.431Z"
+    }
+  ],
+  "notificationOutbox": [
+    {
+      "id": "04e11717-9443-4306-8926-210096fdacf6",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "channel": "WHATSAPP",
+      "toPhone": "098764646467",
+      "templateKey": "RESIDENT_REGISTERED",
+      "payloadJson": {},
+      "status": "PENDING",
+      "retryCount": 0,
+      "createdAt": "2026-01-15T02:42:19.846Z"
+    },
+    {
+      "id": "c60dd791-f3df-4aae-9099-98decb467dcd",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "channel": "WHATSAPP",
+      "toPhone": "081210079919",
+      "templateKey": "ADMIN_RT_REGISTRATION_PENDING",
+      "payloadJson": {
+        "residentName": "henry",
+        "rtName": "006"
+      },
+      "status": "PENDING",
+      "retryCount": 0,
+      "createdAt": "2026-01-15T02:42:19.847Z"
+    },
+    {
+      "id": "8b7639f5-5668-4c40-b209-44cc06fd1d30",
+      "rtId": "2252a52a-75c9-46cb-815d-e4cbf7a5ba88",
+      "channel": "WHATSAPP",
+      "toPhone": "098764646467",
+      "templateKey": "RESIDENT_APPROVED",
+      "payloadJson": {},
+      "status": "PENDING",
+      "retryCount": 0,
+      "createdAt": "2026-01-15T02:43:10.431Z"
+    }
+  ]
+}
