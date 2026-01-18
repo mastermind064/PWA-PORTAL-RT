@@ -16,10 +16,11 @@ const registerResident = async (payload) => {
     phone,
     address,
     email,
-    password
+    password,
+    phoneVerifiedAt
   } = payload;
 
-  if (!inviteCode || !fullName || !email || !password) {
+  if (!inviteCode || !fullName || !email || !password || !phone) {
     const error = new Error("Field wajib belum lengkap");
     error.status = 400;
     throw error;
@@ -52,12 +53,13 @@ const registerResident = async (payload) => {
 
   await db.transaction(async (conn) => {
     await conn.query(
-      `INSERT INTO users (id, email, phone, password_hash, role, status, created_at)
-       VALUES (:id, :email, :phone, :password_hash, :role, :status, :created_at)`,
+      `INSERT INTO users (id, email, phone, phone_verified_at, password_hash, role, status, created_at)
+       VALUES (:id, :email, :phone, :phone_verified_at, :password_hash, :role, :status, :created_at)`,
       {
         id: userId,
         email,
-        phone: phone || null,
+        phone,
+        phone_verified_at: phoneVerifiedAt || null,
         password_hash: payload.passwordHash,
         role: "WARGA",
         status: "PENDING",
@@ -86,7 +88,7 @@ const registerResident = async (payload) => {
         rt_id: rt.id,
         user_id: userId,
         full_name: fullName,
-        phone: phone || null,
+        phone,
         address: address || null,
         approval_status: "PENDING",
         created_at: now

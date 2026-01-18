@@ -1,5 +1,11 @@
-const CACHE_NAME = "portal-rt-v1";
-const CORE_ASSETS = ["/", "/index.html", "/manifest.webmanifest", "/icon.svg"];
+const CACHE_NAME = "portal-rt-v2";
+const CORE_ASSETS = [
+  "/",
+  "/index.html",
+  "/manifest.webmanifest",
+  "/icon.svg",
+  "/offline.html"
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -23,16 +29,36 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  const url = new URL(request.url);
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    return;
+  }
+
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request, { cache: "no-store" })
+        .then((response) => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+          return response;
+        })
+        .catch(() => caches.match("/offline.html"))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
-      return fetch(request).then((response) => {
-        if (response.status === 200 && response.type === "basic") {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
-        }
-        return response;
-      });
+      return fetch(request)
+        .then((response) => {
+          if (response.status === 200 && response.type === "basic") {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+          }
+          return response;
+        })
+        .catch(() => caches.match("/offline.html"));
     })
   );
 });

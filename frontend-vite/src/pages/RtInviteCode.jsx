@@ -12,7 +12,7 @@ const RtInviteCode = () => {
     setError("");
     try {
       const data = await apiRequest("/rt/me", { auth: true });
-      setInviteCode(data.inviteCode || "-");
+      setInviteCode(data.invite_code || "-");
     } catch (err) {
       setError(err.message || "Gagal memuat kode undangan");
     } finally {

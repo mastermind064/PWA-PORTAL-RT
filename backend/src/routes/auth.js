@@ -8,6 +8,8 @@ const {
   refreshExpiry
 } = require("../utils");
 const { registerResident } = require("../services/residentService");
+const { requestOtp, verifyOtp, consumeOtp } = require("../services/otpService");
+const { normalizePhone } = require("../services/whatsappService");
 const { verifyRecaptcha } = require("../services/recaptchaService");
 const { loginRateLimiter } = require("../middleware/rateLimit");
 
@@ -155,14 +157,93 @@ router.post("/register-admin-rt", async (req, res, next) => {
 router.post("/register-warga", async (req, res, next) => {
   try {
     await verifyRecaptcha(req.body.recaptchaToken);
+    const phone = normalizePhone(req.body.phone || "");
+    if (!phone) {
+      return res.status(400).json({ error: "Nomor HP wajib diisi" });
+    }
+    await consumeOtp(phone);
     const payload = {
       ...req.body,
+      phone,
+      phoneVerifiedAt: new Date(),
       passwordHash: hashPassword(req.body.password || "")
     };
     const result = await registerResident(payload);
     return res.status(201).json(result);
   } catch (err) {
     return next(err);
+  }
+});
+
+/**
+ * @openapi
+ * /auth/otp/request:
+ *   post:
+ *     summary: Request OTP untuk verifikasi HP
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - phone
+ *             properties:
+ *               phone:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: OTP terkirim
+ */
+router.post("/otp/request", async (req, res, next) => {
+  try {
+    const result = await requestOtp(
+      req.body.phone || "",
+      req.body.inviteCode || ""
+    );
+    res.json({
+      status: "OTP_SENT",
+      expiresAt: result.expiresAt,
+      ...(result.code ? { code: result.code } : {})
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * @openapi
+ * /auth/otp/verify:
+ *   post:
+ *     summary: Verifikasi OTP untuk HP
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - phone
+ *               - code
+ *             properties:
+ *               phone:
+ *                 type: string
+ *               code:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: OTP terverifikasi
+ */
+router.post("/otp/verify", async (req, res, next) => {
+  try {
+    const result = await verifyOtp(req.body.phone || "", req.body.code || "");
+    res.json(result);
+  } catch (err) {
+    next(err);
   }
 });
 

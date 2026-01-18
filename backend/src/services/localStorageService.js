@@ -70,8 +70,39 @@ const resolveStoragePath = (relativePath) => {
   return resolved;
 };
 
+const uploadTopupProof = async ({ rtId, residentId, file }) => {
+  if (!file) {
+    const error = new Error("File wajib diupload");
+    error.status = 400;
+    throw error;
+  }
+  if (!allowedMime.includes(file.mimetype)) {
+    const error = new Error("Tipe file tidak didukung");
+    error.status = 400;
+    throw error;
+  }
+
+  const relativePath = buildRelativePath(
+    rtId,
+    residentId,
+    "TOPUP",
+    file.originalname
+  );
+  const absolutePath = path.join(storageBase, relativePath);
+  ensureDir(path.dirname(absolutePath));
+  fs.writeFileSync(absolutePath, file.buffer);
+
+  return {
+    storagePath: relativePath,
+    originalName: file.originalname,
+    mimeType: file.mimetype,
+    size: file.size
+  };
+};
+
 module.exports = {
   uploadResidentDocument,
+  uploadTopupProof,
   resolveStoragePath,
   storageBase
 };

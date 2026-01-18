@@ -266,6 +266,45 @@ button {
   color: #991b1b;
 }
 
+.badge.sent {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.payload {
+  margin: 8px 0 0;
+  padding: 10px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.75rem;
+  overflow-x: auto;
+}
+
+select {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #cbd5f5;
+  background: #fff;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.password-toggle {
+  pointer-events: auto !important;
+}
+
 .auth-layout {
   display: grid;
   place-items: center;
@@ -423,6 +462,21 @@ input:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.wallet-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  font-size: 1.1rem;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .icon-button {

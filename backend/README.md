@@ -63,6 +63,30 @@ Pembatasan request untuk login dan upload:
 - `RATE_LIMIT_UPLOAD_WINDOW_MS` (default 60000)
 - `RATE_LIMIT_UPLOAD_MAX` (default 20)
 
+## Scheduler Kas RT
+
+Auto-debit kas RT berjalan berkala:
+- `KAS_RT_SCHEDULER_INTERVAL_MS` (default 86400000 = 24 jam)
+
+## WhatsApp Worker
+
+Worker notifikasi WA berjalan berkala:
+- `NOTIFICATION_WORKER_INTERVAL_MS` (default 15000 = 15 detik)
+- `WA_AUTH_PATH` (default `backend/.wa_auth`)
+
+## Endpoint Tahap 2
+
+### Wallet
+- GET `/wallet/me`
+- GET `/wallet/transactions`
+- POST `/wallet/topup`
+- POST `/wallet/topup/{id}/approve`
+- POST `/wallet/topup/{id}/reject`
+
+### Kas RT
+- GET `/kas-rt/config`
+- PUT `/kas-rt/config`
+
 ## Storage Lokal Dokumen
 
 Dokumen disimpan di storage lokal dan metadata disimpan di database.
@@ -104,6 +128,9 @@ Swagger UI tersedia di `http://localhost:3000/docs`.
 - POST `/super-admin/rts/{id}/approve`
 - POST `/super-admin/rts/{id}/reject`
 - GET `/super-admin/audit-logs`
+- GET `/super-admin/wa/status`
+- POST `/super-admin/wa/register`
+- GET `/super-admin/wa/history`
 
 ### Admin RT
 - GET `/rt/me`
@@ -132,3 +159,7 @@ Ganti dengan database pada tahap berikutnya.
 Asumsi awal:
 - Registrasi warga menggunakan email + password untuk login.
 - Upload dokumen masih berupa metadata URL (bukan upload file langsung).
+
+## Known Issues
+
+- WhatsApp Web JS: beberapa pengiriman WA gagal dengan error seperti `markedUnread`. Ini issue pada library dan akan diselesaikan di tahap berikutnya.

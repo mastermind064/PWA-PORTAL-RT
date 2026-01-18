@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS users (
   id CHAR(36) PRIMARY KEY,
   email VARCHAR(100) NOT NULL,
   phone VARCHAR(20),
+  phone_verified_at DATETIME NULL,
   password_hash TEXT NOT NULL,
   role VARCHAR(20) NOT NULL,
   status VARCHAR(20) NOT NULL,
@@ -142,7 +143,10 @@ CREATE TABLE IF NOT EXISTS wallet_topup_request (
   rt_id CHAR(36) NOT NULL,
   resident_id CHAR(36) NOT NULL,
   amount DECIMAL(18,2) NOT NULL,
-  proof_url TEXT NOT NULL,
+  storage_path TEXT NOT NULL,
+  original_name TEXT NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  size INT NOT NULL,
   status VARCHAR(20) NOT NULL,
   created_at DATETIME NOT NULL,
   updated_at DATETIME NULL,
@@ -292,6 +296,7 @@ CREATE TABLE IF NOT EXISTS notification_outbox (
   created_at DATETIME NOT NULL,
   updated_at DATETIME NULL,
   KEY idx_notification_outbox_rt (rt_id),
+  KEY idx_notification_outbox_status (status),
   CONSTRAINT fk_notification_outbox_rt FOREIGN KEY (rt_id) REFERENCES rt(id)
 ) ENGINE=InnoDB;
 
@@ -303,4 +308,29 @@ CREATE TABLE IF NOT EXISTS notification_log (
   response_text TEXT NULL,
   created_at DATETIME NOT NULL,
   CONSTRAINT fk_notification_log_outbox FOREIGN KEY (outbox_id) REFERENCES notification_outbox(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS phone_otp_request (
+  id CHAR(36) PRIMARY KEY,
+  phone VARCHAR(20) NOT NULL,
+  code_hash TEXT NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  attempts INT NOT NULL DEFAULT 0,
+  expires_at DATETIME NOT NULL,
+  verified_at DATETIME NULL,
+  used_at DATETIME NULL,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NULL,
+  KEY idx_phone_otp_phone (phone),
+  KEY idx_phone_otp_status (status)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS wa_config (
+  id CHAR(36) PRIMARY KEY,
+  phone VARCHAR(20) NULL,
+  status VARCHAR(20) NOT NULL,
+  session_name VARCHAR(100) NOT NULL,
+  last_connected_at DATETIME NULL,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NULL
 ) ENGINE=InnoDB;

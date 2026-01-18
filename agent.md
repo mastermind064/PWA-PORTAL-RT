@@ -9,6 +9,7 @@ Dokumen ini berisi batasan dan standar agar AI membantu pengembangan dengan kons
   - Dokumentasi (README, ADR, catatan teknis)
 - Nama fungsi/variabel/kelas tetap **Bahasa Inggris teknis** (camelCase/PascalCase).
 - Jangan mencampur Bahasa Indonesia dan Inggris dalam **komentar yang sama**.
+- Gunakan styling frontend menggunakan template pada tempalte/html-version/full-version
 
 ## 2) Peran AI
 AI bertindak sebagai:

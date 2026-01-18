@@ -396,6 +396,7 @@ Portal RT dirancang sebagai **Progressive Web App (PWA)** agar:
 - UI Framework: MUI / Ant Design
 - State Server: TanStack Query
 - Form: React Hook Form + Zod
+- Gunakan styling frontend menggunakan template pada tempalte/html-version/full-version
 
 **Struktur Frontend (ringkas)**
 - `/auth` (login, register)
