@@ -162,4 +162,4 @@ Asumsi awal:
 
 ## Known Issues
 
-- WhatsApp Web JS: beberapa pengiriman WA gagal dengan error seperti `markedUnread`. Ini issue pada library dan akan diselesaikan di tahap berikutnya.
+- WhatsApp Web JS: sudah stabil setelah memakai nomor non-business untuk sesi WA.

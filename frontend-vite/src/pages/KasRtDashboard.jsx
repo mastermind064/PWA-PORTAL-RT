@@ -21,10 +21,10 @@ const KasRtDashboard = () => {
           </p>
         </div>
         <div className="hero-actions">
-          <button type="button" className="button ghost">
+          <button type="button" className="btn btn-outline-secondary">
             Export Laporan
           </button>
-          <button type="button" className="button">
+          <button type="button" className="btn btn-primary">
             Update Konfigurasi
           </button>
         </div>
@@ -45,7 +45,7 @@ const KasRtDashboard = () => {
             <h3>Auto-debit Terbaru</h3>
             <p className="muted">Ringkasan hasil penarikan kas RT.</p>
           </div>
-          <button type="button" className="button ghost">
+          <button type="button" className="btn btn-outline-secondary">
             Lihat Semua
           </button>
         </div>
@@ -73,4 +73,5 @@ const KasRtDashboard = () => {
 };
 
 export default KasRtDashboard;
+
 

@@ -59,42 +59,58 @@ const RtProfile = () => {
       </div>
 
       <div className="card">
-        <div className="grid-2">
-          <label>
-            Nama RT
-            <input
-              type="text"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </label>
-          <label>
-            RW
-            <input
-              type="text"
-              value={rw}
-              onChange={(event) => setRw(event.target.value)}
-            />
-          </label>
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="rt-name">
+                Nama RT
+              </label>
+              <input
+                id="rt-name"
+                className="form-control"
+                type="text"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="rt-rw">
+                RW
+              </label>
+              <input
+                id="rt-rw"
+                className="form-control"
+                type="text"
+                value={rw}
+                onChange={(event) => setRw(event.target.value)}
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label" htmlFor="rt-address">
+                Alamat RT
+              </label>
+              <input
+                id="rt-address"
+                className="form-control"
+                type="text"
+                value={address}
+                onChange={(event) => setAddress(event.target.value)}
+              />
+            </div>
+          </div>
+          {rt ? (
+            <div className="mt-3 text-muted">
+              Status: {rt.status}
+            </div>
+          ) : null}
         </div>
-        <label>
-          Alamat RT
-          <input
-            type="text"
-            value={address}
-            onChange={(event) => setAddress(event.target.value)}
-          />
-        </label>
-        {rt ? (
-          <p className="muted">Status: {rt.status}</p>
-        ) : null}
       </div>
 
       {error ? <div className="alert error">{error}</div> : null}
       {success ? <div className="alert success">{success}</div> : null}
 
       <div className="actions">
-        <button className="button" type="button" onClick={handleSave} disabled={saving}>
+        <button className="btn btn-primary" type="button" onClick={handleSave} disabled={saving}>
           {saving ? "Menyimpan..." : "Simpan perubahan"}
         </button>
       </div>
@@ -103,3 +119,4 @@ const RtProfile = () => {
 };
 
 export default RtProfile;
+

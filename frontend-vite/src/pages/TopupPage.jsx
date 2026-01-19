@@ -58,31 +58,46 @@ const TopupPage = () => {
       </div>
 
       <form className="card" onSubmit={handleSubmit}>
-        <label>
-          Nominal topup
-          <input
-            type="number"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-            min="1"
-          />
-        </label>
-        <label>
-          Bukti transfer (jpg/png/pdf)
-          <input
-            type="file"
-            accept=".jpg,.jpeg,.png,.pdf"
-            onChange={(event) => setFile(event.target.files?.[0] || null)}
-          />
-        </label>
-        {error ? <div className="alert error">{error}</div> : null}
-        {success ? <div className="alert success">{success}</div> : null}
-        <button className="button" type="submit" disabled={loading}>
-          {loading ? "Mengirim..." : "Kirim topup"}
-        </button>
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="topup-amount">
+                Nominal topup
+              </label>
+              <input
+                id="topup-amount"
+                className="form-control"
+                type="number"
+                value={amount}
+                onChange={(event) => setAmount(event.target.value)}
+                min="1"
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="topup-proof">
+                Bukti transfer (jpg/png/pdf)
+              </label>
+              <input
+                id="topup-proof"
+                className="form-control"
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+                onChange={(event) => setFile(event.target.files?.[0] || null)}
+              />
+            </div>
+          </div>
+          {error ? <div className="alert error mt-3">{error}</div> : null}
+          {success ? <div className="alert success mt-3">{success}</div> : null}
+          <div className="mt-3">
+            <button className="btn btn-primary" type="submit" disabled={loading}>
+              {loading ? "Mengirim..." : "Kirim topup"}
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );
 };
 
 export default TopupPage;
+

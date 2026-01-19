@@ -260,7 +260,27 @@ Di bawah ini tahapan yang disusun supaya tim fokus pada “yang paling penting d
   - top-up approved/rejected
   - saldo kurang (billing)
 
-**Output siap:** iuran kas RT bisa berjalan tanpa warga “bayar tiap bulan” manual.
+`**Output siap:** iuran kas RT bisa berjalan tanpa warga “bayar tiap bulan” manual.
+#### Tutorial Uji Billing Reminder (Manual)
+Tujuan: memunculkan data di `/kas-rt/reminders` dan halaman �Reminder Billing�.
+
+1) Pastikan ada warga **APPROVED** dan walletnya tersedia.
+2) Atur konfigurasi kas RT:
+   - `` lebih besar dari saldo wallet warga.
+   - `debitDayOfMonth` = tanggal **hari ini**.
+3) Pastikan scheduler auto-debit berjalan:
+   - Backend harus hidup, dan interval `KAS_RT_SCHEDULER_INTERVAL_MS` aktif.
+   - Jika perlu, restart backend dan tunggu sampai interval berjalan.
+4) Setelah auto-debit berjalan:
+   - Sistem akan membuat record `kas_rt_monthly_charge` dengan status `UNPAID`.
+5) Cek endpoint:
+   - `GET /kas-rt/reminders` (opsional filter `?period=YYYY-MM`).
+6) Cek UI:
+   - Buka menu �Reminder Billing� untuk melihat daftar warga dengan saldo kurang.
+
+Catatan:
+- Endpoint ini hanya menampilkan **UNPAID** dari auto-debit kas RT.
+- Jika saldo cukup, status menjadi **PAID** dan tidak muncul di reminder.
 
 ---
 

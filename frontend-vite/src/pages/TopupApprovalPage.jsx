@@ -76,14 +76,14 @@ const TopupApprovalPage = () => {
                     <div className="actions">
                       <button
                         type="button"
-                        className="button"
+                        className="btn btn-primary"
                         onClick={() => handleAction(item.id, "approve")}
                       >
                         Approve
                       </button>
                       <button
                         type="button"
-                        className="button ghost"
+                        className="btn btn-outline-secondary"
                         onClick={() => handleAction(item.id, "reject")}
                       >
                         Reject
@@ -110,3 +110,4 @@ const TopupApprovalPage = () => {
 };
 
 export default TopupApprovalPage;
+

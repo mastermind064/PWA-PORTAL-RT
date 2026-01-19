@@ -26,3 +26,6 @@ export const getCurrentRole = () => {
   return payload?.role || null;
 };
 
+export const getUserEmail = () => {
+  return window.localStorage.getItem("userEmail") || "";
+};

@@ -29,6 +29,7 @@ const Login = () => {
       });
       window.localStorage.setItem("accessToken", data.accessToken);
       window.localStorage.setItem("refreshToken", data.refreshToken);
+      window.localStorage.setItem("userEmail", email);
       navigate("/");
     } catch (err) {
       setError(err.message || "Login gagal");

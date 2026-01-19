@@ -51,7 +51,7 @@ const RtInviteCode = () => {
         <div className="invite-code">
           <span>{inviteCode}</span>
         </div>
-        <button className="button" type="button" onClick={handleGenerate}>
+        <button className="btn btn-primary" type="button" onClick={handleGenerate}>
           Generate kode baru
         </button>
       </div>
@@ -63,3 +63,4 @@ const RtInviteCode = () => {
 };
 
 export default RtInviteCode;
+

@@ -12,8 +12,8 @@ const WalletPage = () => {
       try {
         const walletData = await apiRequest("/wallet/me", { auth: true });
         setWallet(walletData);
-        const txData = await apiRequest("/wallet/transactions", { auth: true });
-        setTransactions(txData);
+        const historyData = await apiRequest("/wallet/history", { auth: true });
+        setTransactions(historyData);
       } catch (err) {
         setError(err.message || "Gagal memuat wallet");
       }
@@ -45,6 +45,7 @@ const WalletPage = () => {
               <th>Tanggal</th>
               <th>Tipe</th>
               <th>Arah</th>
+              <th>Status</th>
               <th>Nominal</th>
             </tr>
           </thead>
@@ -54,12 +55,13 @@ const WalletPage = () => {
                 <td>{new Date(tx.created_at).toLocaleDateString("id-ID")}</td>
                 <td>{tx.type}</td>
                 <td>{tx.direction}</td>
+                <td>{tx.status || "-"}</td>
                 <td>Rp {Number(tx.amount).toLocaleString("id-ID")}</td>
               </tr>
             ))}
             {transactions.length === 0 ? (
               <tr>
-                <td colSpan={4} className="muted">
+                <td colSpan={5} className="muted">
                   Belum ada transaksi.
                 </td>
               </tr>

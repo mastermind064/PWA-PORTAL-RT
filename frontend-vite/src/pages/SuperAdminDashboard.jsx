@@ -49,10 +49,10 @@ const SuperAdminDashboard = () => {
           </p>
         </div>
         <div className="hero-actions">
-          <button type="button" className="button ghost">
+          <button type="button" className="btn btn-outline-secondary">
             Unduh Laporan
           </button>
-          <button type="button" className="button">
+          <button type="button" className="btn btn-primary">
             Kelola RT
           </button>
         </div>
@@ -82,7 +82,7 @@ const SuperAdminDashboard = () => {
             <h3>Ringkasan RT</h3>
             <p className="muted">Status RT terbaru yang perlu perhatian.</p>
           </div>
-          <button type="button" className="button ghost">
+          <button type="button" className="btn btn-outline-secondary">
             Lihat Semua
           </button>
         </div>
@@ -126,3 +126,4 @@ const SuperAdminDashboard = () => {
 };
 
 export default SuperAdminDashboard;
+

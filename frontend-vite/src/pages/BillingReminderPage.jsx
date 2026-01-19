@@ -1,18 +1,43 @@
+import { useEffect, useState } from "react";
+import { apiRequest } from "../utils/api.js";
+
 const BillingReminderPage = () => {
-  const reminders = [
-    {
-      name: "Kas Maret",
-      dueDate: "15/03/2025",
-      target: "120 warga",
-      status: "Berjalan"
-    },
-    {
-      name: "Iuran Kebersihan",
-      dueDate: "20/03/2025",
-      target: "120 warga",
-      status: "Menunggu"
+  const [period, setPeriod] = useState("");
+  const [reminders, setReminders] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadReminders = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const query = period ? `?period=${period}` : "";
+        const data = await apiRequest(`/kas-rt/reminders${query}`, {
+          auth: true
+        });
+        setReminders(data);
+      } catch (err) {
+        setError(err.message || "Gagal memuat reminder billing.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadReminders();
+  }, [period]);
+
+  const handleRetry = async (id) => {
+    setError("");
+    try {
+      await apiRequest(`/kas-rt/reminders/${id}/retry`, {
+        method: "POST",
+        auth: true
+      });
+      setReminders((prev) => prev.filter((item) => item.id !== id));
+    } catch (err) {
+      setError(err.message || "Gagal retry debit.");
     }
-  ];
+  };
 
   return (
     <div className="stack gap-lg">
@@ -24,10 +49,7 @@ const BillingReminderPage = () => {
           </p>
         </div>
         <div className="hero-actions">
-          <button type="button" className="button ghost">
-            Template Pesan
-          </button>
-          <button type="button" className="button">
+          <button type="button" className="btn btn-primary">
             Buat Reminder
           </button>
         </div>
@@ -39,28 +61,51 @@ const BillingReminderPage = () => {
             <h3>Daftar Pengingat</h3>
             <p className="muted">Kelola jadwal kirim notifikasi iuran.</p>
           </div>
-          <button type="button" className="button ghost">
-            Filter
-          </button>
+          <div className="d-flex align-items-center gap-2">
+            <input
+              type="month"
+              className="form-control"
+              value={period}
+              onChange={(event) => setPeriod(event.target.value)}
+            />
+          </div>
         </div>
+        {error ? <div className="alert error">{error}</div> : null}
         <table className="table">
           <thead>
             <tr>
-              <th>Nama Billing</th>
-              <th>Jatuh Tempo</th>
-              <th>Target</th>
+              <th>Periode</th>
+              <th>Warga</th>
+              <th>Nominal</th>
               <th>Status</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {reminders.map((item, index) => (
-              <tr key={`${item.name}-${index}`}>
-                <td>{item.name}</td>
-                <td>{item.dueDate}</td>
-                <td>{item.target}</td>
+            {reminders.map((item) => (
+              <tr key={item.id}>
+                <td>{item.period}</td>
+                <td>{item.residentName}</td>
+                <td>Rp {Number(item.amount).toLocaleString("id-ID")}</td>
                 <td>{item.status}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => handleRetry(item.id)}
+                  >
+                    Retry Debit
+                  </button>
+                </td>
               </tr>
             ))}
+            {reminders.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="muted">
+                  {loading ? "Memuat reminder..." : "Belum ada reminder."}
+                </td>
+              </tr>
+            ) : null}
           </tbody>
         </table>
       </div>
@@ -70,7 +115,7 @@ const BillingReminderPage = () => {
         <div className="grid-2">
           <div>
             <p className="muted">Kirim ulang reminder ke warga yang belum bayar.</p>
-            <button type="button" className="button">
+            <button type="button" className="btn btn-primary">
               Kirim Pengingat
             </button>
           </div>
@@ -78,7 +123,7 @@ const BillingReminderPage = () => {
             <p className="muted">
               Atur jadwal reminder otomatis untuk bulan berikutnya.
             </p>
-            <button type="button" className="button ghost">
+            <button type="button" className="btn btn-outline-secondary">
               Jadwalkan Otomatis
             </button>
           </div>
@@ -89,4 +134,5 @@ const BillingReminderPage = () => {
 };
 
 export default BillingReminderPage;
+
 

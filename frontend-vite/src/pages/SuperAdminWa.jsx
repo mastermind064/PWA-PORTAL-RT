@@ -114,13 +114,13 @@ const SuperAdminWa = () => {
           </p>
         </div>
         <div className="hero-actions">
-          <button type="button" className="button ghost" onClick={loadStatus}>
+          <button type="button" className="btn btn-outline-secondary" onClick={loadStatus}>
             Refresh Status
           </button>
-          <button type="button" className="button" onClick={handleRegister}>
+          <button type="button" className="btn btn-primary" onClick={handleRegister}>
             Register WA
           </button>
-          <button type="button" className="button ghost" onClick={handleReset}>
+          <button type="button" className="btn btn-outline-secondary" onClick={handleReset}>
             Reset Sesi
           </button>
         </div>
@@ -180,7 +180,7 @@ const SuperAdminWa = () => {
             </select>
             <button
               type="button"
-              className="button ghost"
+              className="btn btn-outline-secondary"
               onClick={() => loadHistory(1, phoneFilter)}
             >
               Refresh
@@ -250,7 +250,7 @@ const SuperAdminWa = () => {
                       {(item.log_status || item.status) === "FAILED" ? (
                         <button
                           type="button"
-                          className="button ghost"
+                          className="btn btn-outline-secondary"
                           onClick={() =>
                             handleRetry(item.outbox_id || item.id)
                           }
@@ -284,7 +284,7 @@ const SuperAdminWa = () => {
         <div className="pagination">
           <button
             type="button"
-            className="button ghost"
+            className="btn btn-outline-secondary"
             disabled={historyPage <= 1 || historyLoading}
             onClick={() => loadHistory(historyPage - 1, phoneFilter)}
           >
@@ -295,7 +295,7 @@ const SuperAdminWa = () => {
           </span>
           <button
             type="button"
-            className="button ghost"
+            className="btn btn-outline-secondary"
             disabled={
               historyLoading ||
               historyPage >= Math.max(1, Math.ceil(historyTotal / 10))
@@ -311,3 +311,4 @@ const SuperAdminWa = () => {
 };
 
 export default SuperAdminWa;
+

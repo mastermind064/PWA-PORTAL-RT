@@ -41,6 +41,21 @@ const listWalletTransactions = async (rtId, walletId) => {
   return rows;
 };
 
+const listWalletHistory = async (rtId, residentId, walletId) => {
+  const [rows] = await db.query(
+    `SELECT id, 'WALLET_TX' AS entry_type, type, direction, amount, NULL AS status, created_at
+     FROM wallet_transaction
+     WHERE rt_id = :rt_id AND wallet_id = :wallet_id
+     UNION ALL
+     SELECT id, 'TOPUP_REQUEST' AS entry_type, 'TOPUP_REQUEST' AS type, 'CREDIT' AS direction, amount, status, created_at
+     FROM wallet_topup_request
+     WHERE rt_id = :rt_id AND resident_id = :resident_id
+     ORDER BY created_at DESC`,
+    { rt_id: rtId, wallet_id: walletId, resident_id: residentId }
+  );
+  return rows;
+};
+
 const listTopupRequests = async (rtId, status) => {
   const [rows] = status
     ? await db.query(
@@ -220,6 +235,7 @@ const rejectTopupRequest = async (rtId, topupId, actorUserId) => {
 module.exports = {
   getOrCreateWallet,
   listWalletTransactions,
+  listWalletHistory,
   listTopupRequests,
   createTopupRequest,
   approveTopupRequest,

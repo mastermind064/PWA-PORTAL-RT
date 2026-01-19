@@ -81,7 +81,7 @@ const WargaDetail = () => {
         </div>
         <div className="actions">
           <button
-            className="button"
+            className="btn btn-primary"
             type="button"
             onClick={() => handleAction("approve")}
             disabled={saving}
@@ -89,7 +89,7 @@ const WargaDetail = () => {
             Approve
           </button>
           <button
-            className="button ghost"
+            className="btn btn-outline-secondary"
             type="button"
             onClick={() => handleAction("reject")}
             disabled={saving}
@@ -175,3 +175,4 @@ const WargaDetail = () => {
 };
 
 export default WargaDetail;
+

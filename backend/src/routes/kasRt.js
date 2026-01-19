@@ -1,6 +1,11 @@
 const express = require("express");
 const { requireRole, requireRtAccess } = require("../middleware");
-const { getKasConfig, upsertKasConfig } = require("../services/kasRtService");
+const {
+  getKasConfig,
+  upsertKasConfig,
+  listBillingReminders,
+  retryKasDebit
+} = require("../services/kasRtService");
 
 const router = express.Router();
 
@@ -66,6 +71,74 @@ router.put(
       const result = await upsertKasConfig(
         req.auth.rtId,
         req.body,
+        req.auth.userId
+      );
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /kas-rt/reminders:
+ *   get:
+ *     summary: Daftar billing reminder kas RT (saldo kurang)
+ *     tags:
+ *       - KasRT
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: period
+ *         schema:
+ *           type: string
+ *           example: 2026-01
+ *     responses:
+ *       200:
+ *         description: Daftar reminder
+ */
+router.get(
+  "/reminders",
+  requireRole(["ADMIN_RT", "BENDAHARA"]),
+  async (req, res, next) => {
+    try {
+      const data = await listBillingReminders(req.auth.rtId, req.query.period);
+      res.json(data);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /kas-rt/reminders/{id}/retry:
+ *   post:
+ *     summary: Retry debit kas RT untuk tagihan UNPAID
+ *     tags:
+ *       - KasRT
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Tagihan berhasil didebit ulang
+ */
+router.post(
+  "/reminders/:id/retry",
+  requireRole(["ADMIN_RT", "BENDAHARA"]),
+  async (req, res, next) => {
+    try {
+      const result = await retryKasDebit(
+        req.auth.rtId,
+        req.params.id,
         req.auth.userId
       );
       res.json(result);

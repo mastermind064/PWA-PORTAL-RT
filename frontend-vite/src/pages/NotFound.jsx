@@ -3,7 +3,7 @@ const NotFound = () => {
     <div className="card">
       <h2>Halaman tidak ditemukan</h2>
       <p className="muted">Periksa kembali URL yang kamu buka.</p>
-      <a className="button" href="/">
+      <a className="btn btn-primary" href="/">
         Kembali ke dashboard
       </a>
     </div>
@@ -11,3 +11,4 @@ const NotFound = () => {
 };
 
 export default NotFound;
+

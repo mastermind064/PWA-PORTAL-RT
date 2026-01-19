@@ -48,10 +48,10 @@ const SuperAdminApproval = () => {
           </p>
         </div>
         <div className="hero-actions">
-          <button type="button" className="button ghost">
+          <button type="button" className="btn btn-outline-secondary">
             Filter Status
           </button>
-          <button type="button" className="button">
+          <button type="button" className="btn btn-primary">
             Export
           </button>
         </div>
@@ -89,7 +89,7 @@ const SuperAdminApproval = () => {
                       <div className="actions">
                         <button
                           type="button"
-                          className="button"
+                          className="btn btn-primary"
                           onClick={() => handleAction(item.id, "approve")}
                           disabled={loading}
                         >
@@ -97,7 +97,7 @@ const SuperAdminApproval = () => {
                         </button>
                         <button
                           type="button"
-                          className="button ghost"
+                          className="btn btn-outline-secondary"
                           onClick={() => handleAction(item.id, "reject")}
                           disabled={loading}
                         >
@@ -123,3 +123,4 @@ const SuperAdminApproval = () => {
 };
 
 export default SuperAdminApproval;
+

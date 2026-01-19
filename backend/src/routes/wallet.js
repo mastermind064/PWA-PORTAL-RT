@@ -5,6 +5,7 @@ const { uploadTopupProof } = require("../services/localStorageService");
 const {
   getOrCreateWallet,
   listWalletTransactions,
+  listWalletHistory,
   createTopupRequest,
   listTopupRequests,
   approveTopupRequest,
@@ -76,6 +77,40 @@ router.get("/transactions", requireRole(["WARGA"]), async (req, res, next) => {
     const wallet = await getOrCreateWallet(req.auth.rtId, residentRows[0].id);
     const transactions = await listWalletTransactions(req.auth.rtId, wallet.id);
     res.json(transactions);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * @openapi
+ * /wallet/history:
+ *   get:
+ *     summary: Riwayat semua transaksi wallet (termasuk topup)
+ *     tags:
+ *       - Wallet
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Riwayat transaksi
+ */
+router.get("/history", requireRole(["WARGA"]), async (req, res, next) => {
+  try {
+    const [residentRows] = await db.query(
+      "SELECT id FROM resident WHERE user_id = :user_id AND rt_id = :rt_id LIMIT 1",
+      { user_id: req.auth.userId, rt_id: req.auth.rtId }
+    );
+    if (residentRows.length === 0) {
+      return res.status(404).json({ error: "Profil warga tidak ditemukan" });
+    }
+    const wallet = await getOrCreateWallet(req.auth.rtId, residentRows[0].id);
+    const history = await listWalletHistory(
+      req.auth.rtId,
+      residentRows[0].id,
+      wallet.id
+    );
+    res.json(history);
   } catch (err) {
     next(err);
   }

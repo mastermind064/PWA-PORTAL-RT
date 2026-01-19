@@ -53,43 +53,60 @@ const KasRtConfigPage = () => {
       </div>
 
       <div className="card">
-        <label className="checkbox">
-          <input
-            type="checkbox"
-            checked={isActive}
-            onChange={(event) => setIsActive(event.target.checked)}
-          />
-          Aktifkan auto-debit
-        </label>
-        <div className="grid-2">
-          <label>
-            Nominal bulanan
+        <div className="card-body">
+          <div className="form-check form-switch mb-3">
             <input
-              type="number"
-              value={monthlyAmount}
-              onChange={(event) => setMonthlyAmount(event.target.value)}
-              min="0"
+              className="form-check-input"
+              type="checkbox"
+              id="kas-rt-active"
+              checked={isActive}
+              onChange={(event) => setIsActive(event.target.checked)}
             />
-          </label>
-          <label>
-            Tanggal debit
-            <input
-              type="number"
-              value={debitDay}
-              onChange={(event) => setDebitDay(event.target.value)}
-              min="1"
-              max="28"
-            />
-          </label>
+            <label className="form-check-label" htmlFor="kas-rt-active">
+              Aktifkan auto-debit
+            </label>
+          </div>
+          <div className="row g-3">
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="kas-rt-monthly">
+                Nominal bulanan
+              </label>
+              <input
+                id="kas-rt-monthly"
+                className="form-control"
+                type="number"
+                value={monthlyAmount}
+                onChange={(event) => setMonthlyAmount(event.target.value)}
+                min="0"
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="kas-rt-debit-day">
+                Tanggal debit
+              </label>
+              <input
+                id="kas-rt-debit-day"
+                className="form-control"
+                type="number"
+                value={debitDay}
+                onChange={(event) => setDebitDay(event.target.value)}
+                min="1"
+                max="28"
+              />
+            </div>
+          </div>
+          {error ? <div className="alert error mt-3">{error}</div> : null}
+          {success ? <div className="alert success mt-3">{success}</div> : null}
+          <div className="mt-3">
+            <button className="btn btn-primary" type="button" onClick={handleSave}>
+              Simpan konfigurasi
+            </button>
+          </div>
         </div>
-        {error ? <div className="alert error">{error}</div> : null}
-        {success ? <div className="alert success">{success}</div> : null}
-        <button className="button" type="button" onClick={handleSave}>
-          Simpan konfigurasi
-        </button>
       </div>
     </div>
   );
 };
 
 export default KasRtConfigPage;
+

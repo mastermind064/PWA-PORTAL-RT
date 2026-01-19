@@ -53,6 +53,7 @@ export const apiRequest = async (path, options = {}) => {
 export const clearSession = () => {
   window.localStorage.removeItem("accessToken");
   window.localStorage.removeItem("refreshToken");
+  window.localStorage.removeItem("userEmail");
 };
 
 export const uploadDocument = async (type, file) => {

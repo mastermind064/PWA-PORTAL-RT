@@ -164,85 +164,110 @@ const ProfileComplete = () => {
 
       <div className="card">
         <h3>Data KK</h3>
-        <div className="grid-2">
-          <label>
-            Nomor KK
-            <input
-              type="text"
-              value={kkNumber}
-              onChange={(event) => setKkNumber(event.target.value)}
-            />
-          </label>
-          <label>
-            Alamat KK
-            <input
-              type="text"
-              value={kkAddress}
-              onChange={(event) => setKkAddress(event.target.value)}
-            />
-          </label>
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="kk-number">
+                Nomor KK
+              </label>
+              <input
+                id="kk-number"
+                className="form-control"
+                type="text"
+                value={kkNumber}
+                onChange={(event) => setKkNumber(event.target.value)}
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="kk-address">
+                Alamat KK
+              </label>
+              <input
+                id="kk-address"
+                className="form-control"
+                type="text"
+                value={kkAddress}
+                onChange={(event) => setKkAddress(event.target.value)}
+              />
+            </div>
+            <div className="col-12">
+              <label className="form-label" htmlFor="kk-notes">
+                Catatan
+              </label>
+              <textarea
+                id="kk-notes"
+                className="form-control"
+                rows="2"
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+              />
+            </div>
+          </div>
         </div>
-        <label>
-          Catatan
-          <input
-            type="text"
-            value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-          />
-        </label>
       </div>
 
       <div className="card">
         <div className="section-header">
           <h3>Anggota Keluarga</h3>
-          <button type="button" className="button ghost" onClick={addMember}>
+          <button type="button" className="btn btn-outline-secondary" onClick={addMember}>
             Tambah anggota
           </button>
         </div>
         {familyMembers.map((member, index) => (
-          <div className="member-row" key={`member-${index}`}>
-            <input
-              type="text"
-              placeholder="Nama anggota"
-              value={member.fullName}
-              onChange={(event) => updateMember(index, "fullName", event.target.value)}
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              placeholder="Hubungan"
-              value={member.relationship}
-              onChange={(event) => updateMember(index, "relationship", event.target.value)}
-              autoComplete="off"
-            />
-            <input
-              type="date"
-              placeholder="Tanggal lahir"
-              value={member.birthDate || ""}
-              onChange={(event) => updateMember(index, "birthDate", event.target.value)}
-            />
-            <button
-              type="button"
-              className="icon-button danger"
-              aria-label="Hapus anggota"
-              onClick={() => removeMember(index)}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="18"
-                height="18"
-                aria-hidden="true"
-                focusable="false"
+          <div className="row g-2 align-items-end mb-2" key={`member-${index}`}>
+            <div className="col-md-4">
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Nama anggota"
+                value={member.fullName}
+                onChange={(event) => updateMember(index, "fullName", event.target.value)}
+                autoComplete="off"
+              />
+            </div>
+            <div className="col-md-3">
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Hubungan"
+                value={member.relationship}
+                onChange={(event) => updateMember(index, "relationship", event.target.value)}
+                autoComplete="off"
+              />
+            </div>
+            <div className="col-md-3">
+              <input
+                className="form-control"
+                type="date"
+                placeholder="Tanggal lahir"
+                value={member.birthDate || ""}
+                onChange={(event) => updateMember(index, "birthDate", event.target.value)}
+              />
+            </div>
+            <div className="col-md-2">
+              <button
+                type="button"
+                className="btn btn-icon btn-outline-danger"
+                aria-label="Hapus anggota"
+                onClick={() => removeMember(index)}
               >
-                <path
-                  d="M6 6l12 12M18 6l-12 12"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M6 6l12 12M18 6l-12 12"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -256,7 +281,7 @@ const ProfileComplete = () => {
               {ktpId ? (
                 <button
                   type="button"
-                  className="icon-button"
+                  className="btn btn-icon btn-outline-secondary"
                   aria-label="Ubah dokumen KTP"
                   onClick={() => {
                     setShowKtpUpload(true);
@@ -296,7 +321,7 @@ const ProfileComplete = () => {
             )}
             <input
               ref={ktpInputRef}
-              className={`file-input ${ktpId && !showKtpUpload ? "hidden" : ""}`}
+              className={`form-control file-input ${ktpId && !showKtpUpload ? "hidden" : ""}`}
               type="file"
               accept=".jpg,.jpeg,.png,.pdf"
               onChange={(event) => {
@@ -313,7 +338,7 @@ const ProfileComplete = () => {
               {kkId ? (
                 <button
                   type="button"
-                  className="icon-button"
+                  className="btn btn-icon btn-outline-secondary"
                   aria-label="Ubah dokumen KK"
                   onClick={() => {
                     setShowKkUpload(true);
@@ -353,7 +378,7 @@ const ProfileComplete = () => {
             )}
             <input
               ref={kkInputRef}
-              className={`file-input ${kkId && !showKkUpload ? "hidden" : ""}`}
+              className={`form-control file-input ${kkId && !showKkUpload ? "hidden" : ""}`}
               type="file"
               accept=".jpg,.jpeg,.png,.pdf"
               onChange={(event) => {
@@ -370,7 +395,7 @@ const ProfileComplete = () => {
       {success ? <div className="alert success">{success}</div> : null}
 
       <div className="actions">
-        <button className="button" type="button" onClick={handleSubmit} disabled={saving}>
+        <button className="btn btn-primary" type="button" onClick={handleSubmit} disabled={saving}>
           {saving ? "Menyimpan..." : "Simpan profil"}
         </button>
       </div>
@@ -379,3 +404,4 @@ const ProfileComplete = () => {
 };
 
 export default ProfileComplete;
+
