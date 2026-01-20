@@ -92,9 +92,90 @@ const notifyKasDebit = async (rtId, residentId, status, amount) => {
   });
 };
 
+const notifyFeePaymentSubmitted = async (rtId, paymentId) => {
+  const [rows] = await db.query(
+    `SELECT p.amount, r.full_name, r.phone, c.name AS campaign_name
+     FROM fee_payment_submission p
+     JOIN resident r ON r.id = p.resident_id
+     JOIN fee_billing b ON b.id = p.billing_id
+     JOIN fee_campaign c ON c.id = b.campaign_id
+     WHERE p.id = :id AND p.rt_id = :rt_id`,
+    { id: paymentId, rt_id: rtId }
+  );
+  if (rows.length === 0) return;
+  const payment = rows[0];
+
+  await enqueueNotification({
+    rtId,
+    toPhone: payment.phone,
+    templateKey: "FeePaymentSubmitted",
+    payload: { amount: payment.amount, campaignName: payment.campaign_name }
+  });
+
+  const [admins] = await db.query(
+    `SELECT u.phone FROM user_rt ur
+     JOIN users u ON u.id = ur.user_id
+     WHERE ur.rt_id = :rt_id
+       AND ur.status = 'ACTIVE'
+       AND ur.role IN ('ADMIN_RT','BENDAHARA')`,
+    { rt_id: rtId }
+  );
+  for (const admin of admins) {
+    await enqueueNotification({
+      rtId,
+      toPhone: admin.phone,
+      templateKey: "FeePaymentNeedsApproval",
+      payload: {
+        amount: payment.amount,
+        residentName: payment.full_name,
+        campaignName: payment.campaign_name
+      }
+    });
+  }
+};
+
+const notifyFeePaymentResult = async (rtId, paymentId, status) => {
+  const [rows] = await db.query(
+    `SELECT p.amount, r.phone, c.name AS campaign_name
+     FROM fee_payment_submission p
+     JOIN resident r ON r.id = p.resident_id
+     JOIN fee_billing b ON b.id = p.billing_id
+     JOIN fee_campaign c ON c.id = b.campaign_id
+     WHERE p.id = :id AND p.rt_id = :rt_id`,
+    { id: paymentId, rt_id: rtId }
+  );
+  if (rows.length === 0) return;
+  const payment = rows[0];
+  const templateKey =
+    status === "APPROVED" ? "FeePaymentApproved" : "FeePaymentRejected";
+  await enqueueNotification({
+    rtId,
+    toPhone: payment.phone,
+    templateKey,
+    payload: { amount: payment.amount, campaignName: payment.campaign_name }
+  });
+};
+
+const notifyFeeBillingReminder = async (billing) => {
+  if (!billing || !billing.phone) return;
+  await enqueueNotification({
+    rtId: billing.rt_id || null,
+    toPhone: billing.phone,
+    templateKey: "FeeBillingReminder",
+    payload: {
+      amount: billing.amount,
+      campaignName: billing.campaign_name,
+      period: billing.period
+    }
+  });
+};
+
 module.exports = {
   enqueueNotification,
   notifyTopupSubmitted,
   notifyTopupResult,
-  notifyKasDebit
+  notifyKasDebit,
+  notifyFeePaymentSubmitted,
+  notifyFeePaymentResult,
+  notifyFeeBillingReminder
 };

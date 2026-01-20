@@ -336,10 +336,93 @@ const retryKasDebit = async (rtId, chargeId, actorUserId) => {
   return { status: "PAID", walletTransactionId: txId };
 };
 
+const getKasDashboard = async (rtId) => {
+  const [balanceRows] = await db.query(
+    `SELECT COALESCE(SUM(CASE WHEN type = 'IN' THEN amount ELSE -amount END), 0) AS balance
+     FROM cash_ledger
+     WHERE rt_id = :rt_id`,
+    { rt_id: rtId }
+  );
+  const period = `${new Date().getFullYear()}-${String(
+    new Date().getMonth() + 1
+  ).padStart(2, "0")}`;
+  const [monthRows] = await db.query(
+    `SELECT
+       COALESCE(SUM(CASE WHEN type = 'IN' THEN amount ELSE 0 END), 0) AS debit,
+       COALESCE(SUM(CASE WHEN type = 'OUT' THEN amount ELSE 0 END), 0) AS credit
+     FROM cash_ledger
+     WHERE rt_id = :rt_id AND DATE_FORMAT(created_at, '%Y-%m') = :period`,
+    { rt_id: rtId, period }
+  );
+  const [chargeRows] = await db.query(
+    `SELECT c.period, c.amount, c.status, c.created_at, r.full_name
+     FROM kas_rt_monthly_charge c
+     JOIN resident r ON r.id = c.resident_id
+     WHERE c.rt_id = :rt_id
+     ORDER BY c.created_at DESC
+     LIMIT 10`,
+    { rt_id: rtId }
+  );
+
+  return {
+    balance: balanceRows[0]?.balance || 0,
+    debitMonth: monthRows[0]?.debit || 0,
+    creditMonth: monthRows[0]?.credit || 0,
+    recentCharges: chargeRows.map((row) => ({
+      period: row.period,
+      amount: row.amount,
+      status: row.status,
+      createdAt: row.created_at,
+      fullName: row.full_name
+    }))
+  };
+};
+
+const listKasCharges = async (rtId, period, page, limit) => {
+  const pageNumber = Math.max(Number(page) || 1, 1);
+  const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 50);
+  const offset = (pageNumber - 1) * limitNumber;
+  const wherePeriod = period ? "AND c.period = :period" : "";
+
+  const [countRows] = await db.query(
+    `SELECT COUNT(*) AS total
+     FROM kas_rt_monthly_charge c
+     WHERE c.rt_id = :rt_id ${wherePeriod}`,
+    { rt_id: rtId, period }
+  );
+  const total = Number(countRows[0]?.total || 0);
+
+  const [rows] = await db.query(
+    `SELECT c.*, r.full_name
+     FROM kas_rt_monthly_charge c
+     JOIN resident r ON r.id = c.resident_id
+     WHERE c.rt_id = :rt_id ${wherePeriod}
+     ORDER BY c.created_at DESC
+     LIMIT :limit OFFSET :offset`,
+    { rt_id: rtId, period, limit: limitNumber, offset }
+  );
+
+  return {
+    items: rows.map((row) => ({
+      id: row.id,
+      period: row.period,
+      amount: row.amount,
+      status: row.status,
+      createdAt: row.created_at,
+      fullName: row.full_name
+    })),
+    total,
+    page: pageNumber,
+    limit: limitNumber
+  };
+};
+
 module.exports = {
   getKasConfig,
   upsertKasConfig,
   runMonthlyDebit,
   listBillingReminders,
-  retryKasDebit
+  retryKasDebit,
+  getKasDashboard,
+  listKasCharges
 };

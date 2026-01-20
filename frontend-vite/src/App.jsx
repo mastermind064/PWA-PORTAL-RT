@@ -16,7 +16,13 @@ import TopupPage from "./pages/TopupPage.jsx";
 import TopupApprovalPage from "./pages/TopupApprovalPage.jsx";
 import KasRtConfigPage from "./pages/KasRtConfigPage.jsx";
 import KasRtDashboard from "./pages/KasRtDashboard.jsx";
+import KasRtHistory from "./pages/KasRtHistory.jsx";
 import BillingReminderPage from "./pages/BillingReminderPage.jsx";
+import FeeCampaigns from "./pages/FeeCampaigns.jsx";
+import FeePaymentsApproval from "./pages/FeePaymentsApproval.jsx";
+import FeeBillings from "./pages/FeeBillings.jsx";
+import FeeBillingHistory from "./pages/FeeBillingHistory.jsx";
+import FeeBillingsAdmin from "./pages/FeeBillingsAdmin.jsx";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard.jsx";
 import SuperAdminApproval from "./pages/SuperAdminApproval.jsx";
 import SuperAdminWa from "./pages/SuperAdminWa.jsx";
@@ -67,6 +73,22 @@ function App() {
           }
         />
         <Route
+          path="fees/billings"
+          element={
+            <RequireRole roles={["WARGA"]}>
+              <FeeBillings />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="fees/billings/history"
+          element={
+            <RequireRole roles={["WARGA"]}>
+              <FeeBillingHistory />
+            </RequireRole>
+          }
+        />
+        <Route
           path="topup"
           element={
             <RequireRole roles={["WARGA"]}>
@@ -99,10 +121,42 @@ function App() {
           }
         />
         <Route
+          path="kas-rt/history"
+          element={
+            <RequireRole roles={["ADMIN_RT", "BENDAHARA"]}>
+              <KasRtHistory />
+            </RequireRole>
+          }
+        />
+        <Route
           path="billing/reminder"
           element={
             <RequireRole roles={["ADMIN_RT", "BENDAHARA"]}>
               <BillingReminderPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="fees/campaigns"
+          element={
+            <RequireRole roles={["ADMIN_RT", "BENDAHARA"]}>
+              <FeeCampaigns />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="fees/approval"
+          element={
+            <RequireRole roles={["ADMIN_RT", "BENDAHARA"]}>
+              <FeePaymentsApproval />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="fees/billings/admin"
+          element={
+            <RequireRole roles={["ADMIN_RT", "BENDAHARA"]}>
+              <FeeBillingsAdmin />
             </RequireRole>
           }
         />

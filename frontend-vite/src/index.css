@@ -129,6 +129,10 @@ button {
   white-space: nowrap;
 }
 
+.nav-submenu {
+  margin-left: 16px;
+}
+
 .app-shell.sidebar-collapsed .nav-text,
 .app-shell.sidebar-collapsed .nav-label,
 .app-shell.sidebar-collapsed .brand-title,
@@ -358,6 +362,21 @@ select {
   height: 8px;
   border-radius: 999px;
   background: #ef4444;
+  border: 2px solid #fff;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
   border: 2px solid #fff;
 }
 

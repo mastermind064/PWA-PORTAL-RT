@@ -94,3 +94,21 @@ export const openDocument = async (documentId) => {
   window.open(url, "_blank", "noopener,noreferrer");
   setTimeout(() => URL.revokeObjectURL(url), 10000);
 };
+
+export const openFeeProof = async (paymentId) => {
+  const token = window.localStorage.getItem("accessToken");
+  const response = await fetch(`${API_BASE_URL}/fees/payments/${paymentId}/proof`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({}));
+    const message = errorBody.error || "Gagal membuka bukti pembayaran";
+    throw new Error(message);
+  }
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank", "noopener,noreferrer");
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+};

@@ -15,6 +15,7 @@ const AppLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [refreshTick, setRefreshTick] = useState(0);
   const menuRef = useRef(null);
   const notifRef = useRef(null);
   const stylesheetLinks = useMemo(
@@ -99,6 +100,33 @@ const AppLayout = () => {
             link: "/profil/lengkapi"
           });
         }
+        const billings = await apiRequest("/fees/billings/me?status=UNPAID", {
+          auth: true
+        });
+        (billings || []).slice(0, 5).forEach((billing) => {
+          const amount =
+            Number(billing.amount || 0) > 0
+              ? `Rp ${Number(billing.amount).toLocaleString("id-ID")}`
+              : "Nominal seikhlasnya";
+          nextNotifications.push({
+            id: `billing-${billing.id}`,
+            title: billing.campaign_name || "Iuran",
+            message: `Tagihan ${amount}.`,
+            link: "/fees/billings"
+          });
+        });
+        const rejected = await apiRequest(
+          "/fees/payments/me?status=REJECTED&limit=5&page=1",
+          { auth: true }
+        );
+        (rejected.items || []).forEach((payment) => {
+          nextNotifications.push({
+            id: `billing-reject-${payment.id}`,
+            title: payment.campaign_name || "Iuran",
+            message: "Pembayaran ditolak. Silakan upload ulang.",
+            link: "/fees/billings/history"
+          });
+        });
         if (isActive) {
           setNotifications(nextNotifications);
         }
@@ -112,6 +140,15 @@ const AppLayout = () => {
     return () => {
       isActive = false;
     };
+  }, [isWarga, refreshTick]);
+
+  useEffect(() => {
+    if (!isWarga) return;
+    const intervalMs = 30000;
+    const timer = setInterval(() => {
+      setRefreshTick((prev) => prev + 1);
+    }, intervalMs);
+    return () => clearInterval(timer);
   }, [isWarga]);
 
   const handleLogout = () => {
@@ -235,6 +272,12 @@ const AppLayout = () => {
               <NavLink to="/wallet">
                 <span className="nav-text">Wallet Warga</span>
               </NavLink>
+              <NavLink to="/fees/billings">
+                <span className="nav-text">Tagihan Iuran</span>
+              </NavLink>
+              <NavLink to="/fees/billings/history" className="nav-submenu">
+                <span className="nav-text">History Tagihan Iuran</span>
+              </NavLink>
               <NavLink to="/topup">
                 <span className="nav-text">Topup Deposit</span>
               </NavLink>
@@ -244,6 +287,15 @@ const AppLayout = () => {
             <>
               <NavLink to="/topup/approval">
                 <span className="nav-text">Approval Topup</span>
+              </NavLink>
+              <NavLink to="/fees/campaigns">
+                <span className="nav-text">Campaign Iuran</span>
+              </NavLink>
+              <NavLink to="/fees/billings/admin">
+                <span className="nav-text">Billing Iuran</span>
+              </NavLink>
+              <NavLink to="/fees/approval">
+                <span className="nav-text">Approval Iuran</span>
               </NavLink>
               <NavLink to="/kas-rt" end>
                 <span className="nav-text">Konfigurasi Kas RT</span>
@@ -329,7 +381,12 @@ const AppLayout = () => {
                     />
                   </svg>
                   {notifications.length > 0 ? (
-                    <span className="notification-dot" />
+                    <>
+                      <span className="notification-dot" />
+                      <span className="notification-badge">
+                        {notifications.length > 9 ? "9+" : notifications.length}
+                      </span>
+                    </>
                   ) : null}
                 </button>
                 <div

@@ -13,8 +13,13 @@ const profileRoutes = require("./routes/profile");
 const documentRoutes = require("./routes/documents");
 const walletRoutes = require("./routes/wallet");
 const kasRtRoutes = require("./routes/kasRt");
+const feeRoutes = require("./routes/fees");
 const { swaggerSpec } = require("./swagger");
 const { initWhatsApp } = require("./services/whatsappService");
+const {
+  runRecurringBillings,
+  runFeeBillingReminder
+} = require("./services/feeService");
 const { runNotificationWorker } = require("./services/notificationWorker");
 
 const app = express();
@@ -37,6 +42,7 @@ app.use("/me", authMiddleware, profileRoutes);
 app.use("/documents", authMiddleware, documentRoutes);
 app.use("/wallet", authMiddleware, walletRoutes);
 app.use("/kas-rt", authMiddleware, kasRtRoutes);
+app.use("/fees", authMiddleware, feeRoutes);
 
 app.use((err, req, res, next) => {
   const status = err.status || 500;
@@ -86,6 +92,43 @@ const scheduleKasRtDebit = () => {
 };
 
 scheduleKasRtDebit();
+
+const scheduleFeeBilling = () => {
+  const intervalMs = parseInt(
+    process.env.FEE_BILLING_INTERVAL_MS || "86400000",
+    10
+  );
+  if (!intervalMs || Number.isNaN(intervalMs)) {
+    return;
+  }
+  setInterval(async () => {
+    try {
+      await runRecurringBillings();
+    } catch (err) {
+      console.error("Gagal menjalankan recurring billing iuran:", err.message);
+    }
+  }, intervalMs);
+};
+
+const scheduleFeeReminder = () => {
+  const intervalMs = parseInt(
+    process.env.FEE_REMINDER_INTERVAL_MS || "86400000",
+    10
+  );
+  if (!intervalMs || Number.isNaN(intervalMs)) {
+    return;
+  }
+  setInterval(async () => {
+    try {
+      await runFeeBillingReminder();
+    } catch (err) {
+      console.error("Gagal menjalankan reminder iuran:", err.message);
+    }
+  }, intervalMs);
+};
+
+scheduleFeeBilling();
+scheduleFeeReminder();
 
 const scheduleNotificationWorker = () => {
   const intervalMs = parseInt(

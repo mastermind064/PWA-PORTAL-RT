@@ -4,7 +4,9 @@ const {
   getKasConfig,
   upsertKasConfig,
   listBillingReminders,
-  retryKasDebit
+  retryKasDebit,
+  getKasDashboard,
+  listKasCharges
 } = require("../services/kasRtService");
 
 const router = express.Router();
@@ -142,6 +144,100 @@ router.post(
         req.auth.userId
       );
       res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /kas-rt/dashboard:
+ *   get:
+ *     summary: Ringkasan dashboard kas RT
+ *     tags:
+ *       - KasRT
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Ringkasan kas RT
+ */
+router.get(
+  "/dashboard",
+  requireRole(["ADMIN_RT", "BENDAHARA"]),
+  async (req, res, next) => {
+    try {
+      const data = await getKasDashboard(req.auth.rtId);
+      res.json(data);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /kas-rt/charges:
+ *   get:
+ *     summary: Riwayat auto-debit kas RT
+ *     tags:
+ *       - KasRT
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: period
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Riwayat auto-debit
+ */
+router.get(
+  "/charges",
+  requireRole(["ADMIN_RT", "BENDAHARA"]),
+  async (req, res, next) => {
+    try {
+      const data = await listKasCharges(
+        req.auth.rtId,
+        req.query.period,
+        req.query.page,
+        req.query.limit
+      );
+      res.json(data);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get(
+  "/charges/export",
+  requireRole(["ADMIN_RT", "BENDAHARA"]),
+  async (req, res, next) => {
+    try {
+      const data = await listKasCharges(req.auth.rtId, req.query.period, 1, 1000);
+      const header = "period,full_name,amount,status,created_at";
+      const lines = data.items.map(
+        (row) =>
+          `${row.period},${row.fullName},${row.amount},${row.status},${row.createdAt.toISOString?.() || row.createdAt}`
+      );
+      const csv = [header, ...lines].join("\n");
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=\"kas-rt-report.csv\""
+      );
+      res.send(csv);
     } catch (err) {
       next(err);
     }

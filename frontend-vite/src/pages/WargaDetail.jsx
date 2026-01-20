@@ -61,22 +61,56 @@ const WargaDetail = () => {
 
       <div className="card">
         <h2>Detail Warga</h2>
-        <div className="grid-2">
-          <div>
-            <span className="muted">Nama</span>
-            <p>{resident.fullName}</p>
-          </div>
-          <div>
-            <span className="muted">No HP</span>
-            <p>{resident.phone || "-"}</p>
-          </div>
-          <div>
-            <span className="muted">Alamat</span>
-            <p>{resident.address || "-"}</p>
-          </div>
-          <div>
-            <span className="muted">Status</span>
-            <p>{resident.approvalStatus}</p>
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="resident-name">
+                Nama
+              </label>
+              <input
+                id="resident-name"
+                className="form-control"
+                type="text"
+                value={resident.fullName || ""}
+                readOnly
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="resident-phone">
+                No HP
+              </label>
+              <input
+                id="resident-phone"
+                className="form-control"
+                type="text"
+                value={resident.phone || "-"}
+                readOnly
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="resident-address">
+                Alamat
+              </label>
+              <input
+                id="resident-address"
+                className="form-control"
+                type="text"
+                value={resident.address || "-"}
+                readOnly
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="resident-status">
+                Status
+              </label>
+              <input
+                id="resident-status"
+                className="form-control"
+                type="text"
+                value={resident.approvalStatus || "-"}
+                readOnly
+              />
+            </div>
           </div>
         </div>
         <div className="actions">
@@ -101,78 +135,122 @@ const WargaDetail = () => {
 
       <div className="card">
         <h3>Data KK</h3>
-        <div className="grid-2">
-          <div>
-            <span className="muted">Nomor KK</span>
-            <p>{familyCard?.kkNumber || "-"}</p>
-          </div>
-          <div>
-            <span className="muted">Alamat KK</span>
-            <p>{familyCard?.address || "-"}</p>
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="kk-number">
+                Nomor KK
+              </label>
+              <input
+                id="kk-number"
+                className="form-control"
+                type="text"
+                value={familyCard?.kkNumber || "-"}
+                readOnly
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="kk-address">
+                Alamat KK
+              </label>
+              <input
+                id="kk-address"
+                className="form-control"
+                type="text"
+                value={familyCard?.address || "-"}
+                readOnly
+              />
+            </div>
           </div>
         </div>
       </div>
 
       <div className="card">
         <h3>Dokumen</h3>
-        <div className="grid-2">
-          <div>
-            <span className="muted">KTP</span>
-            <p>
-              {ktpDoc?.originalName ? (
-                <span className="muted">{ktpDoc.originalName}</span>
-              ) : null}
-              {ktpDoc?.id ? (
-                <button
-                  type="button"
-                  className="link"
-                  onClick={() => openDocument(ktpDoc.id)}
-                >
-                  Lihat dokumen
-                </button>
-              ) : (
-                "-"
-              )}
-            </p>
-          </div>
-          <div>
-            <span className="muted">KK</span>
-            <p>
-              {kkDoc?.originalName ? (
-                <span className="muted">{kkDoc.originalName}</span>
-              ) : null}
-              {kkDoc?.id ? (
-                <button
-                  type="button"
-                  className="link"
-                  onClick={() => openDocument(kkDoc.id)}
-                >
-                  Lihat dokumen
-                </button>
-              ) : (
-                "-"
-              )}
-            </p>
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="doc-ktp">
+                KTP
+              </label>
+              <div className="d-flex align-items-center gap-2">
+                <input
+                  id="doc-ktp"
+                  className="form-control"
+                  type="text"
+                  value={ktpDoc?.originalName || "-"}
+                  readOnly
+                />
+                {ktpDoc?.id ? (
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => openDocument(ktpDoc.id)}
+                  >
+                    Lihat
+                  </button>
+                ) : null}
+              </div>
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="doc-kk">
+                KK
+              </label>
+              <div className="d-flex align-items-center gap-2">
+                <input
+                  id="doc-kk"
+                  className="form-control"
+                  type="text"
+                  value={kkDoc?.originalName || "-"}
+                  readOnly
+                />
+                {kkDoc?.id ? (
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => openDocument(kkDoc.id)}
+                  >
+                    Lihat
+                  </button>
+                ) : null}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="card">
         <h3>Anggota Keluarga</h3>
-        <ul className="list">
+        <div className="card-body">
           {(familyMembers || []).map((member) => (
-            <li key={`${member.fullName}-${member.relationship}`}>
-              <strong>{member.fullName}</strong> · {member.relationship}
-            </li>
+            <div className="row g-2 mb-2" key={`${member.fullName}-${member.relationship}`}>
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  type="text"
+                  value={member.fullName}
+                  readOnly
+                />
+              </div>
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  type="text"
+                  value={member.relationship}
+                  readOnly
+                />
+              </div>
+            </div>
           ))}
           {(familyMembers || []).length === 0 ? (
-            <li className="muted">Belum ada data keluarga.</li>
+            <div className="muted">Belum ada data keluarga.</div>
           ) : null}
-        </ul>
+        </div>
       </div>
     </div>
   );
 };
 
 export default WargaDetail;
+
 

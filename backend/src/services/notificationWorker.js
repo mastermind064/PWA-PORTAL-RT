@@ -27,6 +27,24 @@ const renderTemplate = (templateKey, payload = {}) => {
       return `Saldo tidak cukup untuk kas RT sebesar ${formatCurrency(
         payload.amount
       )}. Mohon topup.`;
+    case "FeePaymentSubmitted":
+      return `Bukti iuran ${payload.campaignName || "iuran"} sebesar ${formatCurrency(
+        payload.amount
+      )} sudah diterima. Menunggu verifikasi.`;
+    case "FeePaymentNeedsApproval":
+      return `Pembayaran iuran ${payload.campaignName || "iuran"} dari ${
+        payload.residentName || "warga"
+      } sebesar ${formatCurrency(payload.amount)} menunggu approval.`;
+    case "FeePaymentApproved":
+      return `Pembayaran iuran ${payload.campaignName || "iuran"} sebesar ${formatCurrency(
+        payload.amount
+      )} sudah disetujui. Terima kasih.`;
+    case "FeePaymentRejected":
+      return `Pembayaran iuran ${payload.campaignName || "iuran"} ditolak. Silakan hubungi pengurus RT.`;
+    case "FeeBillingReminder":
+      return `Reminder iuran ${payload.campaignName || "iuran"} ${
+        payload.period ? `periode ${payload.period}` : ""
+      } sebesar ${formatCurrency(payload.amount)} belum dibayar.`;
     case "PhoneOtpCode":
       return `Kode OTP Portal RT: ${payload.code}. Berlaku ${payload.ttlMinutes || 10} menit.`;
     case "RESIDENT_REGISTERED":
